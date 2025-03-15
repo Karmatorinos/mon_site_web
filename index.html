@@ -3,41 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compte à Rebours</title>
+    <title>Giveaways</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             margin-top: 50px;
         }
-        #countdown {
+        .giveaway {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+        }
+        .giveaway h2 {
+            font-size: 28px;
+        }
+        .giveaway p {
             font-size: 24px;
             font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <h1>Giveaway en cours !</h1>
-    <p id="countdown"></p>
+    <h1>Giveaways en cours !</h1>
+
+    <!-- Giveaway 1 -->
+    <div class="giveaway" id="giveaway1">
+        <h2 id="title1">Giveaway 1</h2>
+        <p id="countdown1"></p>
+        <input type="text" id="newTitle1" placeholder="Nouveau nom pour Giveaway 1" />
+        <button onclick="updateTitle(1)">Modifier le nom</button>
+        <input type="number" id="newDays1" placeholder="Entrer le nombre de jours" min="1" />
+        <button onclick="updateDaysRemaining(1)">Modifier les jours</button>
+    </div>
+
+    <!-- Giveaway 2 -->
+    <div class="giveaway" id="giveaway2">
+        <h2 id="title2">Giveaway 2</h2>
+        <p id="countdown2"></p>
+        <input type="text" id="newTitle2" placeholder="Nouveau nom pour Giveaway 2" />
+        <button onclick="updateTitle(2)">Modifier le nom</button>
+        <input type="number" id="newDays2" placeholder="Entrer le nombre de jours" min="1" />
+        <button onclick="updateDaysRemaining(2)">Modifier les jours</button>
+    </div>
+
+    <!-- Giveaway 3 -->
+    <div class="giveaway" id="giveaway3">
+        <h2 id="title3">Giveaway 3</h2>
+        <p id="countdown3"></p>
+        <input type="text" id="newTitle3" placeholder="Nouveau nom pour Giveaway 3" />
+        <button onclick="updateTitle(3)">Modifier le nom</button>
+        <input type="number" id="newDays3" placeholder="Entrer le nombre de jours" min="1" />
+        <button onclick="updateDaysRemaining(3)">Modifier les jours</button>
+    </div>
+
+    <!-- Giveaway 4 -->
+    <div class="giveaway" id="giveaway4">
+        <h2 id="title4">Giveaway 4</h2>
+        <p id="countdown4"></p>
+        <input type="text" id="newTitle4" placeholder="Nouveau nom pour Giveaway 4" />
+        <button onclick="updateTitle(4)">Modifier le nom</button>
+        <input type="number" id="newDays4" placeholder="Entrer le nombre de jours" min="1" />
+        <button onclick="updateDaysRemaining(4)">Modifier les jours</button>
+    </div>
+
+    <!-- Giveaway 5 -->
+    <div class="giveaway" id="giveaway5">
+        <h2 id="title5">Giveaway 5</h2>
+        <p id="countdown5"></p>
+        <input type="text" id="newTitle5" placeholder="Nouveau nom pour Giveaway 5" />
+        <button onclick="updateTitle(5)">Modifier le nom</button>
+        <input type="number" id="newDays5" placeholder="Entrer le nombre de jours" min="1" />
+        <button onclick="updateDaysRemaining(5)">Modifier les jours</button>
+    </div>
 
     <script>
-        // Date de fin du giveaway (YYYY, MM - 1, DD)
-        const endDate = new Date(2025, 2, 20); // Exemple : 20 mars 2025 (Attention : Janvier = 0)
+        let timers = [];
 
-        function updateCountdown() {
-            const now = new Date();
-            const timeDiff = endDate - now;
-            const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+        // Fonction de compte à rebours pour chaque giveaway
+        function createCountdown(giveawayId, daysInitial) {
+            let daysRemaining = daysInitial;
+            let hoursRemaining = 23;
+            let minutesRemaining = 59;
+            let secondsRemaining = 59;
 
-            if (daysRemaining > 0) {
-                document.getElementById("countdown").textContent = `${daysRemaining} jour(s) restant(s)`;
-            } else {
-                document.getElementById("countdown").textContent = "Le giveaway est terminé !";
+            // Arrêter le précédent timer si existant
+            if (timers[giveawayId]) {
+                clearInterval(timers[giveawayId]);
+            }
+
+            // Fonction de mise à jour du compte à rebours
+            function updateCountdown() {
+                const countdownElement = document.getElementById(`countdown${giveawayId}`);
+
+                if (daysRemaining > 1) {
+                    countdownElement.textContent = `${daysRemaining} jour(s) restant(s)`;
+                } else if (daysRemaining === 1) {
+                    countdownElement.textContent = `${hoursRemaining} heure(s) ${minutesRemaining} minute(s) ${secondsRemaining} seconde(s) restant(s)`;
+                } else if (hoursRemaining > 0 || minutesRemaining > 0 || secondsRemaining > 0) {
+                    countdownElement.textContent = `${hoursRemaining} heure(s) ${minutesRemaining} minute(s) ${secondsRemaining} seconde(s) restant(s)`;
+                } else {
+                    countdownElement.textContent = "Le giveaway est terminé !";
+                    clearInterval(timers[giveawayId]); // Arrêter le timer lorsqu'il est terminé
+                }
+            }
+
+            // Mise à jour des secondes, minutes, heures et jours
+            function updateTimers() {
+                if (secondsRemaining > 0) {
+                    secondsRemaining--;
+                } else if (minutesRemaining > 0) {
+                    secondsRemaining = 59;
+                    minutesRemaining--;
+                } else if (hoursRemaining > 0) {
+                    minutesRemaining = 59;
+                    secondsRemaining = 59;
+                    hoursRemaining--;
+                } else if (daysRemaining > 0) {
+                    hoursRemaining = 23;
+                    minutesRemaining = 59;
+                    secondsRemaining = 59;
+                    daysRemaining--;
+                }
+
+                updateCountdown();
+            }
+
+            // Initialisation du compte à rebours
+            updateCountdown();
+            timers[giveawayId] = setInterval(updateTimers, 1000); // Démarre un nouveau timer
+        }
+
+        // Initialiser les giveaways avec leurs jours respectifs
+        createCountdown(1, 10); // Giveaway 1 : 10 jours
+        createCountdown(2, 5);  // Giveaway 2 : 5 jours
+        createCountdown(3, 1);  // Giveaway 3 : 1 jour
+        createCountdown(4, 7);  // Giveaway 4 : 7 jours
+        createCountdown(5, 3);  // Giveaway 5 : 3 jours
+
+        // Modifier le nom d'un giveaway
+        function updateTitle(giveawayNumber) {
+            const newTitle = document.getElementById(`newTitle${giveawayNumber}`).value;
+            if (newTitle.trim()) {
+                document.getElementById(`title${giveawayNumber}`).textContent = newTitle;
             }
         }
 
-        updateCountdown();
-        setInterval(updateCountdown, 1000 * 60 * 60); // Met à jour chaque heure
+        // Modifier le nombre de jours restants
+        function updateDaysRemaining(giveawayNumber) {
+            const newDays = document.getElementById(`newDays${giveawayNumber}`).value;
+            if (newDays && !isNaN(newDays) && newDays > 0) {
+                // Mise à jour du compte à rebours avec les nouveaux jours
+                createCountdown(giveawayNumber, newDays);
+            } else {
+                alert("Veuillez entrer un nombre valide de jours.");
+            }
+        }
     </script>
 </body>
 </html>
