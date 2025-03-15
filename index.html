@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compte à Rebours</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #countdown {
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Giveaway en cours !</h1>
+    <p id="countdown"></p>
+
+    <script>
+        // Date de fin du giveaway (YYYY, MM - 1, DD)
+        const endDate = new Date(2025, 2, 20); // Exemple : 20 mars 2025 (Attention : Janvier = 0)
+
+        function updateCountdown() {
+            const now = new Date();
+            const timeDiff = endDate - now;
+            const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+            if (daysRemaining > 0) {
+                document.getElementById("countdown").textContent = `${daysRemaining} jour(s) restant(s)`;
+            } else {
+                document.getElementById("countdown").textContent = "Le giveaway est terminé !";
+            }
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000 * 60 * 60); // Met à jour chaque heure
+    </script>
+</body>
+</html>
